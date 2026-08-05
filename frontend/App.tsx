@@ -1,7 +1,10 @@
+import { Button } from "@/components/ui/button";
+
 export default function App() {
   return (
-    <main>
-      <h1>Digital Guardian</h1>
+    <main className="flex min-h-screen items-center justify-center gap-4">
+      <h1 className="text-2xl font-semibold">Digital Guardian</h1>
+      <Button>Scaffold OK</Button>
     </main>
   );
 }
