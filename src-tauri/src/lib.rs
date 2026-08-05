@@ -1,6 +1,11 @@
+#[cfg(all(feature = "bundled", feature = "lite"))]
+compile_error!("features `bundled` and `lite` are mutually exclusive");
+#[cfg(not(any(feature = "bundled", feature = "lite")))]
+compile_error!("exactly one of `bundled` or `lite` must be enabled");
+
 mod commands;
-mod db;
-mod models;
+pub mod db;
+pub mod models;
 
 pub fn run() {
     tauri::Builder::default()
