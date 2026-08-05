@@ -1,3 +1,5 @@
+mod db;
+
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![build_variant])
