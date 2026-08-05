@@ -1,9 +1,10 @@
+mod commands;
 mod db;
 mod models;
 
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![build_variant])
+        .invoke_handler(tauri::generate_handler![build_variant, commands::db_status])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
