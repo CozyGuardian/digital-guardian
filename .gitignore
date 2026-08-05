@@ -2,3 +2,7 @@
 docs/superpowers/
 bundled/
 .superpowers/
+node_modules/
+dist/
+target/
+src-tauri/target/
