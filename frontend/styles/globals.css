@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-cozy-bg: #fbf9f5;
+  --color-cozy-card: #ffffff;
+  --color-cozy-sage: #3b6255;
+  --color-cozy-status-safe: #4e9f76;
+  --color-cozy-status-watch: #d98a39;
+  --color-cozy-status-risk: #c85a54;
+  --color-cozy-ink: #2b2118;
+  --color-cozy-ink-soft: #6b5d4f;
+  --color-cozy-hairline: rgba(43, 33, 24, 0.13);
+
+  --radius-cozy: 1rem;
+
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: "Fraunces", serif;
+  --font-mono: "Victor Mono", "JetBrains Mono", monospace;
+}
+
+.dark {
+  --color-cozy-bg: #181b1e;
+  --color-cozy-card: #22262b;
+  --color-cozy-sage: #7fa99b;
+  --color-cozy-status-safe: #7ccaa1;
+  --color-cozy-status-watch: #e6b066;
+  --color-cozy-status-risk: #e58b86;
+  --color-cozy-ink: #ede6dc;
+  --color-cozy-ink-soft: #a89c8c;
+  --color-cozy-hairline: rgba(237, 230, 220, 0.11);
+}
