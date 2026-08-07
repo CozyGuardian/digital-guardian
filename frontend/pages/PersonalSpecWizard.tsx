@@ -84,6 +84,12 @@ export default function PersonalSpecWizard({
   const filledAccountCount = accounts.filter(
     (a) => a.identifier.trim().length > 0,
   ).length;
+  const hasIncompleteOtherPlatform = accounts.some(
+    (a) =>
+      a.platform === "Other" &&
+      a.identifier.trim().length > 0 &&
+      a.customPlatform.trim().length === 0,
+  );
 
   function updateEmail(index: number, identifier: string) {
     setEmails((rows) => rows.map((r, i) => (i === index ? { identifier } : r)));
@@ -198,40 +204,61 @@ export default function PersonalSpecWizard({
     <div className="flex w-full max-w-md flex-col gap-4">
       <h2 className="text-lg font-semibold">Your accounts</h2>
       <div className="flex flex-col gap-2">
-        {accounts.map((row, i) => (
-          <div key={i} className="flex gap-2">
-            <select
-              className="rounded-md border border-slate-300 px-2 py-2"
-              value={row.platform}
-              onChange={(e) => updateAccount(i, { platform: e.target.value })}
-            >
-              {PLATFORM_OPTIONS.map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </select>
-            {row.platform === "Other" && (
-              <input
-                className="w-28 rounded-md border border-slate-300 px-2 py-2"
-                placeholder="Platform name"
-                value={row.customPlatform}
-                onChange={(e) =>
-                  updateAccount(i, { customPlatform: e.target.value })
-                }
-              />
-            )}
-            <input
-              className="flex-1 rounded-md border border-slate-300 px-3 py-2"
-              placeholder="username"
-              value={row.identifier}
-              onChange={(e) => updateAccount(i, { identifier: e.target.value })}
-            />
-            <Button variant="outline" size="sm" onClick={() => removeAccount(i)}>
-              Remove
-            </Button>
-          </div>
-        ))}
+        {accounts.map((row, i) => {
+          const otherPlatformMissing =
+            row.platform === "Other" &&
+            row.identifier.trim().length > 0 &&
+            row.customPlatform.trim().length === 0;
+          return (
+            <div key={i} className="flex flex-col gap-1">
+              <div className="flex gap-2">
+                <select
+                  className="rounded-md border border-slate-300 px-2 py-2"
+                  value={row.platform}
+                  onChange={(e) =>
+                    updateAccount(i, { platform: e.target.value })
+                  }
+                >
+                  {PLATFORM_OPTIONS.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+                {row.platform === "Other" && (
+                  <input
+                    className="w-28 rounded-md border border-slate-300 px-2 py-2"
+                    placeholder="Platform name"
+                    value={row.customPlatform}
+                    onChange={(e) =>
+                      updateAccount(i, { customPlatform: e.target.value })
+                    }
+                  />
+                )}
+                <input
+                  className="flex-1 rounded-md border border-slate-300 px-3 py-2"
+                  placeholder="username"
+                  value={row.identifier}
+                  onChange={(e) =>
+                    updateAccount(i, { identifier: e.target.value })
+                  }
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeAccount(i)}
+                >
+                  Remove
+                </Button>
+              </div>
+              {otherPlatformMissing && (
+                <span className="text-xs text-red-600">
+                  Enter a platform name.
+                </span>
+              )}
+            </div>
+          );
+        })}
         <Button variant="outline" size="sm" onClick={addAccount}>
           Add account
         </Button>
@@ -244,7 +271,11 @@ export default function PersonalSpecWizard({
           Back
         </Button>
         <Button
-          disabled={!canFinish(filledEmailCount, filledAccountCount) || saving}
+          disabled={
+            !canFinish(filledEmailCount, filledAccountCount) ||
+            hasIncompleteOtherPlatform ||
+            saving
+          }
           onClick={handleFinish}
         >
           {saving ? "Saving…" : isEditing ? "Save" : "Finish"}
