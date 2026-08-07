@@ -9,7 +9,12 @@ pub mod models;
 
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![build_variant, commands::db_status])
+        .invoke_handler(tauri::generate_handler![
+            build_variant,
+            commands::db_status,
+            commands::get_personal_spec,
+            commands::save_personal_spec
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
