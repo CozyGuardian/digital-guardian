@@ -115,6 +115,8 @@ Non-technical users are the primary audience:
 - Onboarding wizard must be completed (Personal Spec) before first scan is allowed
 - All destructive actions (delete scan history, clear Personal Spec) require explicit confirmation
 
+**Design system:** see `docs/DESIGN.md` for the full token/color/typography/motion spec — required reading before writing or reviewing any UI/UX code. All components, pages, and layouts must adhere to its tokens and rules (colors, radii, motion, iconography); do not invent custom hexes or generic Tailwind colors outside it.
+
 ---
 
 ## Key External Dependencies
