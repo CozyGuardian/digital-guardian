@@ -13,12 +13,12 @@ export default function Dashboard({ onEditPersonalSpec }: DashboardProps) {
   useEffect(() => {
     dbStatus()
       .then(setStatus)
-      .catch((e) => setError(String(e)));
+      .catch(() => setError("Couldn't load dashboard data."));
   }, []);
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {error && <p className="text-red-600">DB error: {error}</p>}
+      {error && <p className="text-red-600">{error}</p>}
       {!error && !status && <p>Loading...</p>}
       {status && (
         <p>
