@@ -35,6 +35,7 @@ interface AccountRow {
 interface PersonalSpecWizardProps {
   initialData?: PersonalSpec | null;
   onSaved: (spec: PersonalSpec) => void;
+  onCancel?: () => void;
 }
 
 function emailRowsFrom(spec?: PersonalSpec | null): EmailRow[] {
@@ -65,6 +66,7 @@ function accountRowsFrom(spec?: PersonalSpec | null): AccountRow[] {
 export default function PersonalSpecWizard({
   initialData,
   onSaved,
+  onCancel,
 }: PersonalSpecWizardProps) {
   const [step, setStep] = useState<1 | 2>(1);
   const [fullName, setFullName] = useState(initialData?.full_name ?? "");
@@ -90,6 +92,10 @@ export default function PersonalSpecWizard({
       a.identifier.trim().length > 0 &&
       a.customPlatform.trim().length === 0,
   );
+  const hasInvalidEmail = emails.some((e) => {
+    const t = e.identifier.trim();
+    return t.length > 0 && !isEmailFormatValid(t);
+  });
 
   function updateEmail(index: number, identifier: string) {
     setEmails((rows) => rows.map((r, i) => (i === index ? { identifier } : r)));
@@ -193,9 +199,19 @@ export default function PersonalSpecWizard({
           </Button>
         </div>
 
-        <Button disabled={!canProceedStep1(fullName)} onClick={() => setStep(2)}>
-          Next
-        </Button>
+        <div className="flex gap-2">
+          {onCancel && (
+            <Button variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+          )}
+          <Button
+            disabled={!canProceedStep1(fullName) || hasInvalidEmail}
+            onClick={() => setStep(2)}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     );
   }
@@ -270,10 +286,16 @@ export default function PersonalSpecWizard({
         <Button variant="outline" onClick={() => setStep(1)}>
           Back
         </Button>
+        {onCancel && (
+          <Button variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
         <Button
           disabled={
             !canFinish(filledEmailCount, filledAccountCount) ||
             hasIncompleteOtherPlatform ||
+            hasInvalidEmail ||
             saving
           }
           onClick={handleFinish}

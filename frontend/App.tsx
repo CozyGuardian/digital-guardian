@@ -44,6 +44,7 @@ export default function App() {
         <PersonalSpecWizard
           initialData={view.data}
           onSaved={() => setView({ kind: "dashboard" })}
+          onCancel={() => setView({ kind: "dashboard" })}
         />
       )}
       {view.kind === "dashboard" && <Dashboard onEditPersonalSpec={openEdit} />}
