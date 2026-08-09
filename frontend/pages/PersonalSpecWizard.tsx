@@ -157,7 +157,7 @@ export default function PersonalSpecWizard({
   }
 
   const inputClass =
-    "w-full rounded-xl border border-stone-200/50 dark:border-white/10 bg-cozy-bg-light dark:bg-cozy-bg-dark px-4 py-3 text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cozy-sage-light dark:focus:ring-cozy-sage-dark transition-all duration-150";
+    "rounded-xl border border-stone-200/50 dark:border-white/10 bg-cozy-bg-light dark:bg-cozy-bg-dark px-4 py-3 text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cozy-sage-light dark:focus:ring-cozy-sage-dark transition-all duration-150";
   const errorTextClass =
     "text-sm font-medium text-cozy-status-risk dark:text-cozy-status-risk-dark";
 
@@ -189,7 +189,7 @@ export default function PersonalSpecWizard({
         <label className="flex flex-col gap-2 text-sm font-medium text-slate-600 dark:text-slate-400">
           Full name
           <input
-            className={inputClass}
+            className={`w-full ${inputClass}`}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
@@ -210,7 +210,7 @@ export default function PersonalSpecWizard({
               >
                 <div className="flex gap-2">
                   <input
-                    className={`flex-1 ${inputClass}`}
+                    className={`flex-1 min-w-0 ${inputClass}`}
                     placeholder="you@example.com"
                     value={row.identifier}
                     onChange={(e) => updateEmail(i, e.target.value)}
@@ -295,7 +295,7 @@ export default function PersonalSpecWizard({
                   />
                 )}
                 <input
-                  className={`flex-1 ${inputClass}`}
+                  className={`flex-1 min-w-0 ${inputClass}`}
                   placeholder="username"
                   value={row.identifier}
                   onChange={(e) =>
