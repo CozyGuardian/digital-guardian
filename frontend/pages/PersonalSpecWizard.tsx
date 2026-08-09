@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { savePersonalSpec } from "@/lib/api";
 import type { PersonalSpec, PersonalSpecAccountInput } from "@/lib/api";
@@ -155,39 +156,71 @@ export default function PersonalSpecWizard({
     }
   }
 
+  const inputClass =
+    "rounded-xl border border-stone-200/50 dark:border-white/10 bg-cozy-bg-light dark:bg-cozy-bg-dark px-4 py-3 text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-cozy-sage-light dark:focus:ring-cozy-sage-dark transition-all duration-150";
+  const errorTextClass =
+    "text-sm font-medium text-cozy-status-risk dark:text-cozy-status-risk-dark";
+
+  const stepDots = (
+    <div className="flex items-center gap-2" aria-hidden>
+      {[1, 2].map((s) => (
+        <span
+          key={s}
+          className={`h-1.5 rounded-full transition-all duration-200 ${
+            s === step
+              ? "w-6 bg-cozy-sage-light dark:bg-cozy-sage-dark"
+              : "w-1.5 bg-stone-200/50 dark:bg-white/10"
+          }`}
+        />
+      ))}
+    </div>
+  );
+
   if (step === 1) {
     return (
-      <div className="flex w-full max-w-md flex-col gap-4">
-        <h2 className="text-lg font-semibold">Your identity</h2>
-        <label className="flex flex-col gap-1 text-sm">
+      <div className="flex w-full max-w-md flex-col gap-6 bg-cozy-card-light dark:bg-cozy-card-dark rounded-cozy p-6 sm:p-8 border border-stone-200/50 dark:border-white/5 shadow-sm motion-safe:animate-cozy-stagger-in">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-50 font-display">
+            Your identity
+          </h2>
+          {stepDots}
+        </div>
+
+        <label className="flex flex-col gap-2 text-sm font-medium text-slate-600 dark:text-slate-400">
           Full name
           <input
-            className="rounded-md border border-slate-300 px-3 py-2"
+            className={`w-full ${inputClass}`}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
         </label>
 
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium">Emails</span>
+        <div className="flex flex-col gap-3">
+          <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            Emails
+          </span>
           {emails.map((row, i) => {
             const trimmed = row.identifier.trim();
             const invalid = trimmed.length > 0 && !isEmailFormatValid(trimmed);
             return (
-              <div key={i} className="flex flex-col gap-1">
+              <div
+                key={i}
+                className="flex flex-col gap-1.5 motion-safe:animate-cozy-stagger-in"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
                 <div className="flex gap-2">
                   <input
-                    className="flex-1 rounded-md border border-slate-300 px-3 py-2"
+                    className={`flex-1 min-w-0 ${inputClass}`}
                     placeholder="you@example.com"
                     value={row.identifier}
                     onChange={(e) => updateEmail(i, e.target.value)}
                   />
                   <Button variant="outline" size="sm" onClick={() => removeEmail(i)}>
-                    Remove
+                    <X className="w-4 h-4" strokeWidth={2} />
                   </Button>
                 </div>
                 {invalid && (
-                  <span className="text-xs text-red-600">
+                  <span className={errorTextClass}>
                     Doesn't look like a valid email.
                   </span>
                 )}
@@ -195,11 +228,11 @@ export default function PersonalSpecWizard({
             );
           })}
           <Button variant="outline" size="sm" onClick={addEmail}>
-            Add email
+            <Plus className="w-4 h-4" strokeWidth={2} /> Add email
           </Button>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-3 pt-2">
           {onCancel && (
             <Button variant="outline" onClick={onCancel}>
               Cancel
@@ -217,19 +250,29 @@ export default function PersonalSpecWizard({
   }
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-4">
-      <h2 className="text-lg font-semibold">Your accounts</h2>
-      <div className="flex flex-col gap-2">
+    <div className="flex w-full max-w-md flex-col gap-6 bg-cozy-card-light dark:bg-cozy-card-dark rounded-cozy p-6 sm:p-8 border border-stone-200/50 dark:border-white/5 shadow-sm motion-safe:animate-cozy-stagger-in">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-50 font-display">
+          Your accounts
+        </h2>
+        {stepDots}
+      </div>
+
+      <div className="flex flex-col gap-3">
         {accounts.map((row, i) => {
           const otherPlatformMissing =
             row.platform === "Other" &&
             row.identifier.trim().length > 0 &&
             row.customPlatform.trim().length === 0;
           return (
-            <div key={i} className="flex flex-col gap-1">
+            <div
+              key={i}
+              className="flex flex-col gap-1.5 motion-safe:animate-cozy-stagger-in"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
               <div className="flex gap-2">
                 <select
-                  className="rounded-md border border-slate-300 px-2 py-2"
+                  className={inputClass}
                   value={row.platform}
                   onChange={(e) =>
                     updateAccount(i, { platform: e.target.value })
@@ -243,7 +286,7 @@ export default function PersonalSpecWizard({
                 </select>
                 {row.platform === "Other" && (
                   <input
-                    className="w-28 rounded-md border border-slate-300 px-2 py-2"
+                    className={`w-28 ${inputClass}`}
                     placeholder="Platform name"
                     value={row.customPlatform}
                     onChange={(e) =>
@@ -252,7 +295,7 @@ export default function PersonalSpecWizard({
                   />
                 )}
                 <input
-                  className="flex-1 rounded-md border border-slate-300 px-3 py-2"
+                  className={`flex-1 min-w-0 ${inputClass}`}
                   placeholder="username"
                   value={row.identifier}
                   onChange={(e) =>
@@ -264,25 +307,23 @@ export default function PersonalSpecWizard({
                   size="sm"
                   onClick={() => removeAccount(i)}
                 >
-                  Remove
+                  <X className="w-4 h-4" strokeWidth={2} />
                 </Button>
               </div>
               {otherPlatformMissing && (
-                <span className="text-xs text-red-600">
-                  Enter a platform name.
-                </span>
+                <span className={errorTextClass}>Enter a platform name.</span>
               )}
             </div>
           );
         })}
         <Button variant="outline" size="sm" onClick={addAccount}>
-          Add account
+          <Plus className="w-4 h-4" strokeWidth={2} /> Add account
         </Button>
       </div>
 
-      {saveError && <p className="text-sm text-red-600">{saveError}</p>}
+      {saveError && <p className={errorTextClass}>{saveError}</p>}
 
-      <div className="flex gap-2">
+      <div className="flex gap-3 pt-2">
         <Button variant="outline" onClick={() => setStep(1)}>
           Back
         </Button>
